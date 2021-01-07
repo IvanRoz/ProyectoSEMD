@@ -5,10 +5,12 @@
  */
 package com.ipn.mx.controlador.web;
 
+import com.ipn.mx.modelo.dao.IntercambioDAO;
 import com.ipn.mx.modelo.dao.UsuarioDAO;
 import com.ipn.mx.modelo.dto.UsuarioDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -94,6 +96,7 @@ public class UsuarioServlet extends HttpServlet {
     private void loginUsuario(HttpServletRequest request, HttpServletResponse response) {
         UsuarioDTO dto = new UsuarioDTO();
         UsuarioDAO dao = new UsuarioDAO();
+        IntercambioDAO daoI = new IntercambioDAO();
         HttpSession sesion = request.getSession();
         
         dto.getEntidad().setAlias(request.getParameter("nombreUsuario"));
@@ -101,8 +104,10 @@ public class UsuarioServlet extends HttpServlet {
 
         try {
             dto = dao.login(dto);
+            List lista = daoI.readAll();
             if (dto != null) {
                   sesion.setAttribute("Usuario",dto.getEntidad().getAlias());
+                  sesion.setAttribute("ListaDeIntercambios",lista);
                   RequestDispatcher rd = request.getRequestDispatcher("LoginExitoso.jsp");
                  rd.forward(request, response);            
             } else {
