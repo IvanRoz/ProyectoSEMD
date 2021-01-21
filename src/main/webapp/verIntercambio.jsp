@@ -19,7 +19,7 @@
         <!-- Image and text -->
         <nav class="navbar navbar-dark bg-dark">
             <img src="Imagenes/Regalo.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
-            <a class="navbar-brand" href="#"> Datos del intercambio</a>
+            <a class="navbar-brand" href="#"> Datos del intercambio </a>
         </nav>   
         
         <div class="container">

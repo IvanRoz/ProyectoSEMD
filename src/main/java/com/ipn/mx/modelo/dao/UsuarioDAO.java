@@ -4,6 +4,7 @@ import com.ipn.mx.modelo.dto.UsuarioDTO;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,6 +21,9 @@ public class UsuarioDAO {
     private static final String SQL_INSERT="insert into usuario (alias,nombre,correo,clave) values (?,?,?,?);";
     private static final String SQL_LOGIN="select * from usuario where alias = ? and clave = ?";
     private static final String SQL_SELECT="select * from usuario where idUsuario = ?";
+    private static final String SQL_UPDATE="update usuario set alias = ?, nombre = ?, correo = ?, clave = ? "
+            + "where idUsuario = ?";
+    
     
     private Connection con;
     
@@ -119,6 +123,27 @@ public class UsuarioDAO {
         }
         return resultados;
     }
+     
+    public void update(UsuarioDTO dto) throws SQLException {
+        obtenerConexion();
+        PreparedStatement ps = null;
+        try {
+            ps = con.prepareCall(SQL_UPDATE);
+            ps.setString(1, dto.getEntidad().getAlias());
+            ps.setString(2, dto.getEntidad().getNombre());
+            ps.setString(3, dto.getEntidad().getCorreo());
+            ps.setString(4, dto.getEntidad().getClave());
+            ps.setInt(5, dto.getEntidad().getIdUsuario());
+            ps.executeUpdate();
+        } finally {
+            if (ps != null) {
+                ps.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    } 
      
 //    public static void main(String[] args) {
 //        UsuarioDAO dao = new UsuarioDAO();

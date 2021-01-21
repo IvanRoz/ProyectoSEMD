@@ -17,7 +17,7 @@
         <body background="Imagenes/intercambio.jpg">
             <nav class="navbar navbar-dark bg-dark">
                 <img src="Imagenes/Regalo.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
-                <a class="navbar-brand" href="#"> Bienvenido <c:out value="${Usuario}"/> </a>
+                <a class="navbar-brand" href="UsuarioServlet?accion=verUsuario"> Bienvenido <c:out value="${Usuario}"/> </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>

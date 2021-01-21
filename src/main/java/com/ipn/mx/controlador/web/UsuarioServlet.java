@@ -38,7 +38,13 @@ public class UsuarioServlet extends HttpServlet {
             registrarUsuario(request,response);
           }else if (accion.equals("login")){
               loginUsuario(request,response);
-            }
+            }else if(accion.equals("verUsuario")){
+                verUsuario(request,response);
+              } else if(accion.equals("actualizarUsuario")){
+                   actualizarUsuario(request,response);
+                 }else if(accion.equals("update")){
+                       updateUser(request,response);
+                 }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -114,7 +120,7 @@ public class UsuarioServlet extends HttpServlet {
                   sesion.setAttribute("Usuario",dto.getEntidad().getAlias());
                   sesion.setAttribute("idUsuario",dto.getEntidad().getIdUsuario());
                   RequestDispatcher rd = request.getRequestDispatcher("IntercambioServlet?accion=listaIntercambios");
-                 rd.forward(request, response);            
+                  rd.forward(request, response);            
             } else {
                 RequestDispatcher rd = request.getRequestDispatcher("Login.html");
                 rd.forward(request, response);
@@ -124,6 +130,59 @@ public class UsuarioServlet extends HttpServlet {
         }
         
         
+    }
+
+    private void verUsuario(HttpServletRequest request, HttpServletResponse response) {
+        UsuarioDTO dto = new UsuarioDTO();
+        UsuarioDAO dao = new UsuarioDAO();
+        HttpSession sesion = request.getSession();
+        
+        dto.getEntidad().setIdUsuario(Integer.parseInt(sesion.getAttribute("idUsuario").toString()));
+        
+        try {
+            dto = dao.Read(dto);
+            request.setAttribute("User", dto);
+            RequestDispatcher rd = request.getRequestDispatcher("verPerfil.jsp");
+            rd.forward(request, response); 
+        } catch (SQLException | ServletException | IOException ex) {
+            Logger.getLogger(UsuarioServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void actualizarUsuario(HttpServletRequest request, HttpServletResponse response) {
+        UsuarioDTO dto = new UsuarioDTO();
+        UsuarioDAO dao = new UsuarioDAO();
+        HttpSession sesion = request.getSession();
+        
+        dto.getEntidad().setIdUsuario(Integer.parseInt(sesion.getAttribute("idUsuario").toString()));
+        
+        try {
+            dto = dao.Read(dto);
+            request.setAttribute("User", dto);
+            RequestDispatcher rd = request.getRequestDispatcher("actualizarPerfil.jsp");
+            rd.forward(request, response); 
+        } catch (SQLException | ServletException | IOException ex) {
+            Logger.getLogger(UsuarioServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void updateUser(HttpServletRequest request, HttpServletResponse response) {
+        UsuarioDTO dto = new UsuarioDTO();
+        UsuarioDAO dao = new UsuarioDAO();
+        
+        dto.getEntidad().setIdUsuario(Integer.parseInt(request.getParameter("idUsuario")));
+        dto.getEntidad().setAlias(request.getParameter("alias"));
+        dto.getEntidad().setNombre(request.getParameter("nombre"));
+        dto.getEntidad().setCorreo(request.getParameter("email"));
+        dto.getEntidad().setClave(request.getParameter("claveUsuario"));
+        
+        try {
+            dao.update(dto);
+            RequestDispatcher rd = request.getRequestDispatcher("UsuarioServlet?accion=verUsuario");
+            rd.forward(request, response); 
+        } catch (SQLException | ServletException | IOException ex) {
+            Logger.getLogger(UsuarioServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
