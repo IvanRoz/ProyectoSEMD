@@ -7,10 +7,15 @@ package com.ipn.mx.controlador.web;
 
 import com.ipn.mx.modelo.dao.IntercambioDAO;
 import com.ipn.mx.modelo.dao.UsuarioDAO;
+import com.ipn.mx.modelo.dto.IntercambioDTO;
 import com.ipn.mx.modelo.dto.UsuarioDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -107,8 +112,8 @@ public class UsuarioServlet extends HttpServlet {
             List lista = daoI.readAll();
             if (dto != null) {
                   sesion.setAttribute("Usuario",dto.getEntidad().getAlias());
-                  sesion.setAttribute("ListaDeIntercambios",lista);
-                  RequestDispatcher rd = request.getRequestDispatcher("LoginExitoso.jsp");
+                  sesion.setAttribute("idUsuario",dto.getEntidad().getIdUsuario());
+                  RequestDispatcher rd = request.getRequestDispatcher("IntercambioServlet?accion=listaIntercambios");
                  rd.forward(request, response);            
             } else {
                 RequestDispatcher rd = request.getRequestDispatcher("Login.html");
@@ -119,6 +124,6 @@ public class UsuarioServlet extends HttpServlet {
         }
         
         
-    }   
+    }
 
 }

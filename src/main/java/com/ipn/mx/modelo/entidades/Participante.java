@@ -6,22 +6,27 @@
 package com.ipn.mx.modelo.entidades;
 
 import java.io.Serializable;
-import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 /**
  *
  * @author Ivan
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Intercambio implements Serializable{
-     private int idIntercambio;
-     private String nombreIntercambio;
-     private String tema;
-     private Date fechaIntercambio;
-     private int montoMax;
+@AllArgsConstructor
+public class Participante implements Serializable{
+    
+    private int idIntercambio;
+    private int idUsuario;
+    private String nombreParticipante;
+    private boolean participa;
+    
+    public boolean getParticipa(){
+        return this.participa;
+    }
+    
 }

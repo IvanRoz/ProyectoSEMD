@@ -1,6 +1,12 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.ipn.mx.modelo.dao;
 
-import com.ipn.mx.modelo.dto.UsuarioDTO;
+import com.ipn.mx.modelo.dto.IntercambioDTO;
+import com.ipn.mx.modelo.dto.ParticipanteDTO;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,11 +21,12 @@ import java.util.logging.Logger;
  *
  * @author Ivan
  */
-public class UsuarioDAO {
+public class ParticipanteDAO {
     
-    private static final String SQL_INSERT="insert into usuario (alias,nombre,correo,clave) values (?,?,?,?);";
-    private static final String SQL_LOGIN="select * from usuario where alias = ? and clave = ?";
-    private static final String SQL_SELECT="select * from usuario where idUsuario = ?";
+    private static final String SQL_INSERT="insert into participante values (?,?,?)";
+    private static final String SQL_SELECT="select * from participante where idIntercambio = ? and idUsuario = ?";
+    private static final String SQL_SELECT_ALL="select * from participante where idIntercambio = ?";
+    private static final String SQL_DELETE="delete from participante where idIntercambio = ? and idUsuario = ?";
     
     private Connection con;
     
@@ -31,7 +38,6 @@ public class UsuarioDAO {
         try {
              Class.forName(driverMySql);
             con = DriverManager.getConnection(url, user, pass);
-        //    System.out.println("Logre la coneccion");
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -40,15 +46,14 @@ public class UsuarioDAO {
         return con;
     }
     
-    public void create(UsuarioDTO dto) throws SQLException{
+    public void create(ParticipanteDTO dto) throws SQLException{
         obtenerConexion();
         CallableStatement cs = null;
         try{
             cs = con.prepareCall(SQL_INSERT);
-            cs.setString(1,dto.getEntidad().getAlias());
-            cs.setString(2,dto.getEntidad().getNombre());
-            cs.setString(3,dto.getEntidad().getCorreo());
-            cs.setString(4,dto.getEntidad().getClave());
+            cs.setInt(1,dto.getEntidad().getIdIntercambio());
+            cs.setInt(2,dto.getEntidad().getIdUsuario());
+            cs.setString(3,dto.getEntidad().getNombreParticipante());
             cs.executeUpdate();
         }finally{
             if(cs != null)
@@ -58,41 +63,18 @@ public class UsuarioDAO {
         }
     }
     
-    public UsuarioDTO login(UsuarioDTO dto)throws SQLException{
-        obtenerConexion();
-        CallableStatement cs = null;
-        ResultSet rs = null;
-        try{
-            cs = con.prepareCall(SQL_LOGIN);
-            cs.setString(1, dto.getEntidad().getAlias());
-            cs.setString(2, dto.getEntidad().getClave());
-            rs = cs.executeQuery();
-            List resultados = obtenerReusltados(rs);
-            if(resultados.size() > 0){
-                return (UsuarioDTO) resultados.get(0);
-            }else
-                return null;
-        }finally{
-            if(rs != null)
-                 rs.close();
-            if(cs != null)
-                 cs.close();
-            if(con != null)
-                 con.close();
-        }
-    }
-    
-    public UsuarioDTO Read(UsuarioDTO dto)throws SQLException{
+    public ParticipanteDTO read(ParticipanteDTO dto)throws SQLException{
         obtenerConexion();
         CallableStatement cs = null;
         ResultSet rs = null;
         try{
             cs = con.prepareCall(SQL_SELECT);
-            cs.setInt(1, dto.getEntidad().getIdUsuario());
+            cs.setInt(1, dto.getEntidad().getIdIntercambio());
+            cs.setInt(2, dto.getEntidad().getIdUsuario());
             rs = cs.executeQuery();
             List resultados = obtenerReusltados(rs);
             if(resultados.size() > 0){
-                return (UsuarioDTO) resultados.get(0);
+                return (ParticipanteDTO) resultados.get(0);
             }else
                 return null;
         }finally{
@@ -105,30 +87,56 @@ public class UsuarioDAO {
         }
     }
     
-     private List obtenerReusltados(ResultSet rs) throws SQLException {
+    public List readAll(ParticipanteDTO dto)throws SQLException{
+        obtenerConexion();
+        CallableStatement cs = null;
+        ResultSet rs = null;
+        try{
+            cs = con.prepareCall(SQL_SELECT_ALL);
+            cs.setInt(1, dto.getEntidad().getIdIntercambio());
+            rs = cs.executeQuery();
+            List resultados = obtenerReusltados(rs);
+            if(resultados.size() > 0){
+                return resultados;
+            }else
+                return null;
+        }finally{
+            if(rs != null)
+                 rs.close();
+            if(cs != null)
+                 cs.close();
+            if(con != null)
+                 con.close();
+        }
+    }
+    
+    public void delete(ParticipanteDTO dto) throws SQLException{
+        obtenerConexion();
+        CallableStatement cs = null;
+        try{
+            cs = con.prepareCall(SQL_DELETE);
+            cs.setInt(1,dto.getEntidad().getIdIntercambio());
+            cs.setInt(2,dto.getEntidad().getIdUsuario());
+            cs.executeUpdate();
+        }finally{
+            if(cs != null)
+                  cs.close();
+            if(con != null)
+                  con.close();
+        }
+    }
+    
+    private List obtenerReusltados(ResultSet rs) throws SQLException {
         List resultados = new ArrayList();
-        
         while(rs.next()){
-            UsuarioDTO dto = new UsuarioDTO();
+            ParticipanteDTO dto = new ParticipanteDTO();
+            dto.getEntidad().setIdIntercambio(rs.getInt("idIntercambio"));
             dto.getEntidad().setIdUsuario(rs.getInt("idUsuario"));
-            dto.getEntidad().setAlias(rs.getString("alias"));
-            dto.getEntidad().setNombre(rs.getString("nombre"));
-            dto.getEntidad().setCorreo(rs.getString("correo"));
-            dto.getEntidad().setClave(rs.getString("clave"));
+            dto.getEntidad().setNombreParticipante(rs.getString("nombreParticipante"));
+            dto.getEntidad().setParticipa(rs.getBoolean("participa"));
             resultados.add(dto);
         }
         return resultados;
     }
-     
-//    public static void main(String[] args) {
-//        UsuarioDAO dao = new UsuarioDAO();
-//        UsuarioDTO dto = new UsuarioDTO();
-//        dto.getEntidad().setAlias("Ivan Rz");
-//        dto.getEntidad().setClave("12345");
-//        
-//        System.out.println(dao.login(dto));
-//    }
-// 
-     
-
+    
 }

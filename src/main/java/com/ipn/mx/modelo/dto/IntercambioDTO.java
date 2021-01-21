@@ -30,6 +30,7 @@ public class IntercambioDTO implements Serializable{
         sb.append("Id Intercambio : ").append(getEntidad().getIdIntercambio()).append("\n");
         sb.append("nombre Intercambio : ").append(getEntidad().getNombreIntercambio()).append("\n");
         sb.append("Tema : ").append(getEntidad().getTema()).append("\n");
+        sb.append("Fecha : ").append(getEntidad().getFechaIntercambio()).append("\n");
         sb.append("Monto Maximo : ").append(getEntidad().getMontoMax()).append("\n\n");
         return sb.toString();
     }
