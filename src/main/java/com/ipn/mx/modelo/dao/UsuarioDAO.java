@@ -21,6 +21,7 @@ public class UsuarioDAO {
     private static final String SQL_INSERT="insert into usuario (alias,nombre,correo,clave) values (?,?,?,?);";
     private static final String SQL_LOGIN="select * from usuario where alias = ? and clave = ?";
     private static final String SQL_SELECT="select * from usuario where idUsuario = ?";
+    private static final String SQL_SELECT_BY_NAME="select * from usuario where alias = ?";
     private static final String SQL_UPDATE="update usuario set alias = ?, nombre = ?, correo = ?, clave = ? "
             + "where idUsuario = ?";
     
@@ -109,6 +110,29 @@ public class UsuarioDAO {
         }
     }
     
+    public UsuarioDTO ReadByName(UsuarioDTO dto)throws SQLException{
+        obtenerConexion();
+        CallableStatement cs = null;
+        ResultSet rs = null;
+        try{
+            cs = con.prepareCall(SQL_SELECT_BY_NAME);
+            cs.setString(1, dto.getEntidad().getAlias());
+            rs = cs.executeQuery();
+            List resultados = obtenerReusltados(rs);
+            if(resultados.size() > 0){
+                return (UsuarioDTO) resultados.get(0);
+            }else
+                return null;
+        }finally{
+            if(rs != null)
+                 rs.close();
+            if(cs != null)
+                 cs.close();
+            if(con != null)
+                 con.close();
+        }
+    }
+    
      private List obtenerReusltados(ResultSet rs) throws SQLException {
         List resultados = new ArrayList();
         
@@ -148,12 +172,11 @@ public class UsuarioDAO {
 //    public static void main(String[] args) {
 //        UsuarioDAO dao = new UsuarioDAO();
 //        UsuarioDTO dto = new UsuarioDTO();
-//        dto.getEntidad().setAlias("Ivan Rz");
-//        dto.getEntidad().setClave("12345");
+//        dto.getEntidad().setAlias("Ian S");
 //        
-//        System.out.println(dao.login(dto));
+//        System.out.println(dao.ReadByName(dto));
 //    }
-// 
+ 
      
 
 }

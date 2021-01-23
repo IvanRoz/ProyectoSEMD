@@ -49,12 +49,14 @@
                     <c:choose>
                         <c:when test="${Participa==1}">
                             <a href="IntercambioServlet?accion=dejarIntercambio&id=<c:out value="${Intercambio.entidad.idIntercambio}"/>" class="btn btn-success"> Abandonar intercambio </a>          
+                            <a href="UsuarioServlet?accion=agregarParticipantes&idIntercambio=<c:out value="${Intercambio.entidad.idIntercambio}"/>" class="btn btn-success"> Añadir amigos al intercambio</a>
                         </c:when>    
                         <c:otherwise>
                            <a href="IntercambioServlet?accion=participar&id=<c:out value="${Intercambio.entidad.idIntercambio}"/>" class="btn btn-success"> Participar </a>          
                         </c:otherwise>
                     </c:choose>
                     <a href="IntercambioServlet?accion=listaIntercambios" class="btn btn-danger"> Regresar a la lista de intercambios </a>
+                    
                 </div>
                 
                

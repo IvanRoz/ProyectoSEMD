@@ -36,8 +36,18 @@
                     </ul>
                 </div>
                 <div class=" card-body">
-                    <a href="IntercambioServlet?accion=listaIntercambios" class="btn btn-danger"> Regresar a la lista de intercambios </a>
-                    <a href="UsuarioServlet?accion=actualizarUsuario" class="btn btn-primary"> Modificar Datos </a>                 
+                    <c:choose>
+                        <c:when test="${amigo==1}">
+                            <a href="UsuarioServlet?accion=verAmigos" class="btn btn-danger"> Regresar a la lista de amigos </a>
+                            <a 
+                               href="UsuarioServlet?accion=agregarAmigo&id=<c:out value="${User.entidad.idUsuario}"/>&nombre=<c:out value="${User.entidad.nombre}"/>" 
+                               class="btn btn-primary"> Agregar Amigo </a>          
+                        </c:when>    
+                        <c:otherwise>
+                            <a href="IntercambioServlet?accion=listaIntercambios" class="btn btn-danger"> Regresar a la lista de intercambios </a> 
+                            <a href="UsuarioServlet?accion=actualizarUsuario" class="btn btn-primary"> Modificar Datos </a>          
+                        </c:otherwise>
+                    </c:choose>
                 </div>
                 
                

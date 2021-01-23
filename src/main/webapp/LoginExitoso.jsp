@@ -30,7 +30,7 @@
                             <a class="nav-link" href="BuscarInter.jsp">Buscar intercambio<span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" href="#">Ver amigos<span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="UsuarioServlet?accion=verAmigos">Ver amigos<span class="sr-only">(current)</span></a>
                         </li>
                     </ul>
                 </div>

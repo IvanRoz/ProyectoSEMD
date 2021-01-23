@@ -5,9 +5,11 @@
  */
 package com.ipn.mx.controlador.web;
 
+import com.ipn.mx.modelo.dao.AmigoDAO;
 import com.ipn.mx.modelo.dao.IntercambioDAO;
 import com.ipn.mx.modelo.dao.ParticipanteDAO;
 import com.ipn.mx.modelo.dao.UsuarioDAO;
+import com.ipn.mx.modelo.dto.AmigoDTO;
 import com.ipn.mx.modelo.dto.IntercambioDTO;
 import com.ipn.mx.modelo.dto.ParticipanteDTO;
 import com.ipn.mx.modelo.dto.UsuarioDTO;
@@ -45,7 +47,9 @@ public class IntercambioServlet extends HttpServlet {
                          participarIntercambio(request,response);
                         }else if(accion.equals("dejarIntercambio")){
                            dejarIntercambio(request, response);
-                          }
+                          }else if(accion.equals("nuevoParticipante")){
+                              nuevoParticipante(request, response);
+                              }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -105,11 +109,12 @@ public class IntercambioServlet extends HttpServlet {
         IntercambioDTO dto = new IntercambioDTO();
         IntercambioDAO dao = new IntercambioDAO();
         HttpSession sesion = request.getSession();
+        
         String fecha = request.getParameter("fecha");
         dto.getEntidad().setNombreIntercambio(request.getParameter("nombreIntercambio"));
         dto.getEntidad().setTema(request.getParameter("tema"));
         dto.getEntidad().setFechaIntercambio(Date.valueOf(fecha));
-        dto.getEntidad().setMontoMax(Integer.parseInt(request.getParameter("montoMax")));
+        dto.getEntidad().setMontoMax(Integer.parseInt(request.getParameter("montoMax")));;
         
         try {
             dao.create(dto);
@@ -204,6 +209,41 @@ public class IntercambioServlet extends HttpServlet {
             Logger.getLogger(IntercambioServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        
+    }
+
+    private void nuevoParticipante(HttpServletRequest request, HttpServletResponse response) {
+        ParticipanteDTO dto = new ParticipanteDTO();
+        ParticipanteDTO dto2 = new ParticipanteDTO();
+        ParticipanteDAO dao = new ParticipanteDAO();
+        AmigoDAO daoA = new AmigoDAO();
+        AmigoDTO dtoA = new AmigoDTO();
+        HttpSession sesion = request.getSession();
+
+        dto.getEntidad().setIdIntercambio(Integer.parseInt(request.getParameter("idIntercambio")));
+        dto.getEntidad().setIdUsuario(Integer.parseInt(request.getParameter("id")));
+        dto.getEntidad().setNombreParticipante(request.getParameter("nombre"));
+        dto2  = dto;
+        try {    
+            dto = dao.read(dto);
+            if(dto == null){
+                dao.create(dto2);   
+            }else{
+                dtoA.getEntidad().setIdUsuario(Integer.parseInt(sesion.getAttribute("idUsuario").toString()));
+                List lista = daoA.readAll(dtoA);
+                request.setAttribute("idIntercambio", dto2.getEntidad().getIdIntercambio());
+                request.setAttribute("alerta", 1);
+                request.setAttribute("agregar", 1);
+                request.setAttribute("ListaAmigos", lista);
+                RequestDispatcher rd = request.getRequestDispatcher("verAmigos.jsp");
+                rd.forward(request, response);
+            }
+            RequestDispatcher rd = request.getRequestDispatcher("IntercambioServlet?accion=ver&id="+dto2.getEntidad().getIdIntercambio());
+            rd.forward(request, response);
+            
+        } catch (SQLException | ServletException | IOException ex) {
+            Logger.getLogger(IntercambioServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
 

@@ -39,7 +39,7 @@
             <div class="form-group">
                 <div class="col-sm-6">
                     <input type="submit" value="Buscar intercambio" class="btn btn-success"/>
-                    <a class="btn btn-danger btn-xs" href="LoginExitoso.jsp"/>Regresar</a>
+                    <a class="btn btn-danger btn-xs" href="IntercambioServlet?accion=listaIntercambios"/>Regresar</a>
                 </div>
             </div>    
 

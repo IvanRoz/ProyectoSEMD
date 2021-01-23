@@ -78,8 +78,8 @@
                     
                 </div>
                 <div class=" card-body">
-                    <a href="UsuarioServlet?accion=verUsuario" class="btn btn-danger"> Regresar </a>
-                    <input type="submit" class="btn btn-primary" value="Actualizar"> 
+                    <input type="submit" class="btn btn-primary" value="Actualizar">
+                    <a href="UsuarioServlet?accion=verUsuario" class="btn btn-danger"> Regresar </a> 
                 </div>
                 
             </form>   

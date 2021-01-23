@@ -139,4 +139,14 @@ public class ParticipanteDAO {
         return resultados;
     }
     
+//    public static void main(String[] args) {
+//        ParticipanteDTO dto = new ParticipanteDTO();
+//        ParticipanteDAO dao = new ParticipanteDAO();
+//        
+//        dto.getEntidad().setIdUsuario(20);
+//        dto.getEntidad().setIdIntercambio(1);
+//        dto.getEntidad().setNombreParticipante("Juan GM");
+//        
+//    }
+//    
 }
